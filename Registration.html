@@ -2,96 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vihaan Digital Seva - Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Vihaan Digital Seva</title>
+
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #43e97b, #38f9d7);
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0078d7, #28a745);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
+      padding: 20px;
     }
+
     .register-box {
       background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 450px;
+      width: 320px;
+      padding: 25px;
+      border-radius: 12px;
       text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
+
     .register-box h2 {
-      margin-bottom: 25px;
-      color: #333;
+      color: #0078d7;
+      margin-bottom: 15px;
     }
-    .register-box input {
+
+    input {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 8px 0;
       border-radius: 8px;
+      border: 1px solid #ccc;
     }
-    .register-box button {
-      background: #43e97b;
-      color: white;
-      padding: 12px;
+
+    .btn {
       width: 100%;
+      background: #ffa500;
+      padding: 10px;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
+      font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
     }
-    .register-box button:hover {
-      background: #38f9d7;
-    }
-    .register-box .links {
-      margin-top: 15px;
-    }
-    .register-box .links a {
-      color: #0077cc;
-      text-decoration: none;
-    }
-    .error {
-      color: red;
+
+    .btn:hover { background: #cc8400; }
+
+    .link {
+      margin-top: 12px;
+      display: block;
       font-size: 14px;
-      display: none;
     }
   </style>
 </head>
 <body>
 
   <div class="register-box">
-    <h2>User Registration</h2>
-    <form id="regForm" action="{{ url_for('register') }}" method="POST">
-      <input type="text" name="fullname" placeholder="Full Name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-      <div class="error" id="errorMsg">Passwords do not match!</div>
-      <button type="submit">Register</button>
-    </form>
-    <div class="links">
-      <p><a href="{{ url_for('login') }}">Already have an account? Login</a></p>
-    </div>
+    <h2>Create Account</h2>
+
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="text" id="mobile" placeholder="Mobile Number" required>
+    <input type="password" id="password" placeholder="Create Password" required>
+
+    <button class="btn" onclick="registerUser()">Register</button>
+
+    <a href="lo.html" class="link">Already have an account? Login</a>
   </div>
 
   <script>
-    const form = document.getElementById('regForm');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirmPassword');
-    const errorMsg = document.getElementById('errorMsg');
+  function registerUser() {
+    let name = document.getElementById("name").value.trim();
+    let mobile = document.getElementById("mobile").value.trim();
+    let password = document.getElementById("password").value.trim();
 
-    form.addEventListener('submit', function(e) {
-      if (password.value !== confirmPassword.value) {
-        e.preventDefault();
-        errorMsg.style.display = 'block';
-      } else {
-        errorMsg.style.display = 'none';
-      }
-    });
-  </script>
+    if (!name || !mobile || !password) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    if (mobile.length != 10) {
+      alert("Mobile number must be 10 digits.");
+      return;
+    }
+
+    // ✅ Use "users" key to match Admin Dashboard
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // ✅ Check duplicate mobile
+    let exists = users.some(u => u.mobile === mobile);
+    if (exists) {
+      alert("Mobile number already registered. Please login.");
+      return;
+    }
+
+    // ✅ Store New User
+    users.push({ name, mobile, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Registration Successful ✅ Please Login Now.");
+    window.location.href = "lo.html";
+  }
+</script>
+
 
 </body>
 </html>
